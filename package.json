@@ -1,0 +1,79 @@
+{
+  "name": "spgamemodextension",
+  "displayName": "浮岛传说模组开发工具包",
+  "description": "为开发浮岛传说的模组提供支持, 提高开发效率",
+  "version": "0.0.4",
+  "engines": {
+    "vscode": "^1.77.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "spgamemodextension.sync",
+        "title": "同步变量 (Sync)"
+      },
+      {
+        "command": "spgamemodextension.syncStatic",
+        "title": "静态同步变量 (Sync Static)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "spgamemodextension_sidebar",
+          "title": "模组工具包",
+          "icon": "sidebar_icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "spgamemodextension_sidebar": [
+        {
+          "id": "spgamemodextension_project",
+          "name": "项目"
+        },
+        {
+          "id": "spgamemodextension_debug",
+          "name": "调试"
+        },
+        {
+          "id": "spgamemodextension_release",
+          "name": "正式导出"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "csharp",
+        "path": "./snippets/csharp.json"
+      }
+    ]
+  },
+  "repository": {},
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.77.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  }
+}

@@ -1,0 +1,171 @@
+{
+    "sync": {
+        "prefix": "sync",
+        "body": [
+            "[SyncGetter] _get() => default; [SyncSetter] void _set() { }",
+            "[Sync] public   { get => _get(); set => _set(); }"
+        ],
+        "description": "sync"
+    },
+    "syncStatic": {
+        "prefix": "syncStatic",
+        "body": [
+            "[SyncGetter] static _get() => default; [SyncSetter] static void _set() { }",
+            "[Sync] public static   { get => _get(); set => _set(); }"
+        ],
+        "description": "syncStatic"
+    },
+    "StorageItem": {
+        "prefix": "StorageItem",
+        "body": [
+            "using GameCore;",
+            "using UnityEngine;",
+            "using static GameCore.PlayerUI;",
+            "",
+            "namespace TheNameSpace",
+            "{",
+            "    [ItemId(\"YourItemId\")]",
+            "    public class $TM_FILENAME_BASE : StorageBlockBehaviour",
+            "    {",
+            "        public const int defaultItemCountConst = 10;",
+            "        public override int defaultItemCount { get; set; } = defaultItemCountConst;",
+            "        public override string sidebarId { get; set; } = \"\";",
+            "        public static ScrollViewIdMessage itemView;",
+            "        public static InventorySlotUI[] slotUIs = new InventorySlotUI[defaultItemCountConst];",
+            "",
+            "        public static ScrollViewIdMessage GenerateItemView()",
+            "        {",
+            "            if (!itemView)",
+            "            {",
+            "                //生成物品视图",
+            "                Player.local.pui.GenerateSidebar(SidebarType.Left, \"\", 52.5f, 210, Vector2.zero, out itemView);",
+            "",
+            "                //初始化所有UI",
+            "                for (int i = 0; i < slotUIs.Length; i++)",
+            "                {",
+            "                    itemView.AddChild((slotUIs[i] = InventorySlotUI.Generate($\"_{i}\", $\"_{i}\", itemView.gridLayoutGroup.cellSize)).button);",
+            "                }",
+            "            }",
+            "            return itemView;",
+            "        }",
+            "",
+            "        public override void RefreshItemView()",
+            "        {",
+            "            for (int i = 0; i < slotUIs.Length; i++)",
+            "            {",
+            "                slotUIs[i].Refresh(this, i.ToString());",
+            "            }",
+            "        }",
+            "",
+            "        public $TM_FILENAME_BASE(Player player, ItemData datum, string indexInInventory) : base(player, datum, indexInInventory)",
+            "        {",
+            "",
+            "        }",
+            "    }",
+            "}"
+        ],
+        "description": "StorageItem"
+    },
+    "StorageBlock": {
+        "prefix": "StorageBlock",
+        "body": [
+            "using GameCore;",
+            "using UnityEngine;",
+            "using static GameCore.PlayerUI;",
+            "",
+            "namespace TheNameSpace",
+            "{",
+            "    public class $TM_FILENAME_BASE : StorageItemBehaviour",
+            "    {",
+            "        public const int defaultItemCountConst = 28;",
+            "        public override int defaultItemCount { get; set; } = defaultItemCountConst;",
+            "        public override string sidebarId { get; set; } = \"\";",
+            "        public static ScrollViewIdMessage itemView;",
+            "        public static InventorySlotUI[] slotUIs = new InventorySlotUI[defaultItemCountConst];",
+            "",
+            "        public static ScrollViewIdMessage GenerateItemView()",
+            "        {",
+            "            if (!itemView)",
+            "            {",
+            "                //生成物品视图",
+            "                Player.local.pui.GenerateSidebar(SidebarType.Left, \"\", 52.5f, 210, Vector2.zero, out itemView);",
+            "",
+            "                //初始化所有UI",
+            "                for (int i = 0; i < slotUIs.Length; i++)",
+            "                {",
+            "                    itemView.AddChild((slotUIs[i] = InventorySlotUI.Generate($\"_{i}\", $\"_{i}\", itemView.gridLayoutGroup.cellSize)).button);",
+            "                }",
+            "            }",
+            "            return itemView;",
+            "        }",
+            "",
+            "        public override void Start()",
+            "        {",
+            "            base.Start();",
+            "",
+            "            GenerateItemView().gameObject.SetActive(false);",
+            "        }",
+            "",
+            "        public override void RefreshItemView()",
+            "        {",
+            "            for (int i = 0; i < slotUIs.Length; i++)",
+            "            {",
+            "                slotUIs[i].Refresh(this, i.ToString());",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+        ],
+        "description": "StorageBlock"
+    },
+    "psvoid": {
+        "prefix": "psvoid",
+        "body": [
+            "public static void Method()",
+            "{",
+            "",
+            "}"
+        ],
+        "description": "psvoid"
+    },
+    "pvoid": {
+        "prefix": "pvoid",
+        "body": [
+            "public void Method()",
+            "{",
+            "",
+            "}"
+        ],
+        "description": "pvoid"
+    },
+    "void": {
+        "prefix": "void",
+        "body": [
+            "private void Method()",
+            "{",
+            "",
+            "}"
+        ],
+        "description": "void"
+    },
+    "svoid": {
+        "prefix": "svoid",
+        "body": [
+            "private static void Method()",
+            "{",
+            "",
+            "}"
+        ],
+        "description": "svoid"
+    },
+    "provoid": {
+        "prefix": "provoid",
+        "body": [
+            "protected void Method()",
+            "{",
+            "",
+            "}"
+        ],
+        "description": "provoid"
+    }
+}

@@ -36,6 +36,11 @@ export class ProjectEntryList
           break;
 
         case 2:
+          str = "重载窗口";
+          command = "workbench.action.reloadWindow";
+          break;
+
+        case 3:
           str = "创建方块";
           command = "spgamemodextension.project.generation.block";
           break;

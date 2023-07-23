@@ -20,7 +20,7 @@ export class ProjectEntryList
   ): vscode.ProviderResult<ProjectEntryItem[]> {
     //子节点
     var children = [];
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < 4; index++) {
       var str: string = "";
       var command: string = "";
 

@@ -187,7 +187,84 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  //TODO: Edit function
+  let projectGenerationAudioDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.project.generation.audio",
+    () => {
+      if (hasModPath()) {
+        var editor = vscode.window.activeTextEditor;
+        if (editor && editor.selection && editor.selection.active) {
+          vscode.window
+            .showInputBox({
+              placeHolder: "例: D:\\sources\\music.ogg", // 在输入框内的提示信息
+              prompt: "音频源路径", // 在输入框下方的提示信息
+              ignoreFocusOut: true,
+            })
+            .then((originPath) => {
+              if (
+                !originPath ||
+                originPath.length === 0 ||
+                !fs.readFileSync(originPath)
+              ) {
+                vscode.window.showErrorMessage(`无法找到指定的音频`);
+                return;
+              }
+
+              vscode.window
+                .showInputBox({
+                  placeHolder:
+                    "允许更改以方便分类音频, 例如可以输入 audio\\music\\happy.ogg", // 在输入框内的提示信息
+                  prompt: "音频目标路径", // 在输入框下方的提示信息
+                  value: `audio\\${pathUtil.basename(originPath)}`,
+                  ignoreFocusOut: true,
+                })
+                .then((targetPath) => {
+                  vscode.window
+                    .showInputBox({
+                      placeHolder: "例: ori:rain ori:music test:attack hi:hurt", // 在输入框内的提示信息
+                      prompt: "音频ID", // 在输入框下方的提示信息
+                      ignoreFocusOut: true,
+                    })
+                    .then((id) => {
+                      if (!id || id.length === 0) {
+                        vscode.window.showErrorMessage(`音频ID不能为空`);
+                        return;
+                      }
+
+                      vscode.window
+                        .showInputBox({
+                          placeHolder: "例: 0 0.1 0.2 0.3 0.4 0.5 1 1.0 1.1", // 在输入框内的提示信息
+                          prompt: "音量", // 在输入框下方的提示信息
+                          value: "1", // 默认值
+                          ignoreFocusOut: true,
+                        })
+                        .then((volumeStr) => {
+                          if (
+                            !volumeStr ||
+                            volumeStr.length === 0 ||
+                            !parseFloat(volumeStr)
+                          ) {
+                            vscode.window.showErrorMessage(`音量不正确`);
+                            return;
+                          }
+                          vscode.window
+                            .showInputBox({
+                              placeHolder:
+                                "例: GameScene; GameScene, MainScene; ", // 在输入框内的提示信息
+                              prompt: "自动播放的场景", // 在输入框下方的提示信息
+                              value: id, // 默认值
+                              ignoreFocusOut: true,
+                            })
+                            .then((texture) => {});
+                        });
+                    });
+                });
+            });
+        }
+      }
+    }
+  );
+
+  //TODO: Edit this function
   let projectGenerationBlockDisposable = vscode.commands.registerCommand(
     "spgamemodextension.project.generation.block",
     () => {
@@ -198,6 +275,7 @@ export function activate(context: vscode.ExtensionContext) {
             .showInputBox({
               placeHolder: "例: ori:dirt ori:sand test:stupid hi:new_block", // 在输入框内的提示信息
               prompt: "方块ID", // 在输入框下方的提示信息
+              ignoreFocusOut: true,
             })
             .then((id) => {
               if (!id || id.length === 0) {
@@ -210,6 +288,7 @@ export function activate(context: vscode.ExtensionContext) {
                   placeHolder: "例: 0 1 2 3 4 5 10 11 19 80", // 在输入框内的提示信息
                   prompt: "硬度", // 在输入框下方的提示信息
                   value: "5", // 默认值
+                  ignoreFocusOut: true,
                 })
                 .then((hardnessStr) => {
                   if (!hardnessStr || hardnessStr.length === 0) {
@@ -220,8 +299,9 @@ export function activate(context: vscode.ExtensionContext) {
                     .showInputBox({
                       placeHolder:
                         "例: ori:dirt ori:dirt_texture, 可以与方块名一致, 也可以不一样", // 在输入框内的提示信息
-                      prompt: "贴图ID", // 在输入框下方的提示信息
+                      prompt: "纹理ID", // 在输入框下方的提示信息
                       value: id, // 默认值
+                      ignoreFocusOut: true,
                     })
                     .then((texture) => {
                       vscode.window
@@ -229,6 +309,7 @@ export function activate(context: vscode.ExtensionContext) {
                           placeHolder: "必须为 true 或 false 中的一个",
                           canPickMany: false,
                           title: "可碰撞",
+                          ignoreFocusOut: true,
                         })
                         .then((collidibleStr) => {
                           if (
@@ -245,11 +326,13 @@ export function activate(context: vscode.ExtensionContext) {
                               placeHolder:
                                 "例: GameCore.GrassBlockBehaviour GameCore.DirtBehaviour GameCore.SandBlockBehaviour, 需要包含命名空间, 可留空", // 在输入框内的提示信息
                               prompt: "行为包", // 在输入框下方的提示信息
+                              ignoreFocusOut: true,
                             })
                             .then((behaviour) => {
                               var collidible = collidibleStr === "true";
                               var hardness = parseFloat(hardnessStr);
 
+                              //TODO: 只管引用纹理ID
                               if (texture && texture.length !== 0) {
                                 joc.writeTextureSetting(
                                   Array.from(
@@ -319,10 +402,6 @@ export function activate(context: vscode.ExtensionContext) {
       if (hasWorkspace() && hasModPath() && hasGamePath()) {
         createNewTerminal().then(async (terminal) => {
           var workspace = getWorkspacePath();
-          var scripts = pathUtil.join(getModPath(), "scripts");
-          if (!fs.existsSync(scripts)) {
-            fs.mkdirSync(scripts);
-          }
           terminal.sendText(`dotnet build "${scriptsProjPath()}"`);
           var dllPath = `"${pathUtil.join(
             workspace,
@@ -346,7 +425,6 @@ export function activate(context: vscode.ExtensionContext) {
           terminal.sendText(
             `cp -r -force ${joc.modSourcePath()} ${modTargetPath()}`
           );
-
           waitForTerminalCompletion(terminal).then(() => {
             killGame().then(() => {
               runGame();
@@ -423,6 +501,7 @@ function showGamePathInputBox() {
       placeHolder:
         "先找到 SkyOdyssey.exe, 然后填写 SkyOdyssey.exe 所处的目录, 如 D:\\Game, 不能写 D:\\Game\\SkyOdyssey", // 在输入框内的提示信息
       prompt: "游戏文件夹", // 在输入框下方的提示信息
+      ignoreFocusOut: true,
     })
     .then((input) => {
       if (input) {
@@ -440,6 +519,7 @@ function showModPathInputBox() {
       placeHolder:
         "如果我的模组叫 my_mod, 模组目录在 C:\\mods, 不要写 C:\\mods\\my_mod, 直接输入所有模组的根就好", // 在输入框内的提示信息
       prompt: "模组文件夹", // 在输入框下方的提示信息
+      ignoreFocusOut: true,
     })
     .then((input) => {
       if (input) {
@@ -457,6 +537,7 @@ function showSoleAssetsPathInputBox() {
       placeHolder:
         "找到游戏版本对应的 sole_assets, 如 D:\\Game\\SkyOdyssey_Data\\Managed\\StreamingAssets\\sole_assets", // 在输入框内的提示信息
       prompt: "独有资源文件夹", // 在输入框下方的提示信息
+      ignoreFocusOut: true,
     })
     .then((input) => {
       if (input) {
@@ -473,6 +554,7 @@ function showModIdInputBox() {
     .showInputBox({
       placeHolder: "例如: try test new_items stronger_enemies harder_game", // 在输入框内的提示信息
       prompt: "模组ID", // 在输入框下方的提示信息
+      ignoreFocusOut: true,
     })
     .then((input) => {
       if (input && input.length !== 0) {

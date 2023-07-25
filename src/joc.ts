@@ -7,6 +7,10 @@ import * as fs from "fs";
 import * as pathUtil from "path";
 import { ModInfo064 } from "./json_objects/mod_info/0.6.4";
 import {
+  AudioSettings051,
+  AudioSettings051_Audio,
+} from "./json_objects/audio_settings/0.5.1";
+import {
   TextureSettings046,
   TextureSettings046_Texture,
 } from "./json_objects/texture_settings/0.4.6";
@@ -25,6 +29,18 @@ export function writeTextureSetting(textures: TextureSettings046_Texture[]) {
 
 export function loadTextureSetting(): TextureSettings046 {
   const content = fs.readFileSync(textureSettingsPath(), "utf-8");
+  const result = JSON.parse(content);
+  return result;
+}
+
+export function writeAudioSetting(audio: AudioSettings051_Audio[]) {
+  const data = new AudioSettings051(audio);
+  const config = JSON.stringify(data);
+  fs.writeFileSync(audioSettingsPath(), config);
+}
+
+export function loadAudioSetting(): AudioSettings051 {
+  const content = fs.readFileSync(audioSettingsPath(), "utf-8");
   const result = JSON.parse(content);
   return result;
 }

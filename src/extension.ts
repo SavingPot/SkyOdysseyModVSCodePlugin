@@ -525,7 +525,7 @@ export function activate(context: vscode.ExtensionContext) {
               value: "origin/main",
             })
             .then((branch) => {
-              terminal.sendText(`git branch --set-upstream-to=${branch} `);
+              terminal.sendText(`git branch --set-upstream-to=${branch}`);
             });
         });
       }

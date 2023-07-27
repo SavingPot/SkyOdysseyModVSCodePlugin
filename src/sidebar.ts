@@ -302,10 +302,10 @@ export class GitEntryList implements vscode.TreeDataProvider<GitEntryItem> {
           icon = new vscode.ThemeIcon("debug-reverse-continue");
           break;
 
-        case 2:
-          str = "撤销上上次更改";
+        case 3:
+          str = "重置上传目标分支";
           command = "spgamemodextension.git.reset-upstream-branch";
-          icon = new vscode.ThemeIcon("debug-reverse-continue");
+          icon = new vscode.ThemeIcon("debug-restart");
           break;
 
         default:

@@ -259,3 +259,56 @@ export class ReleaseEntryList
     return children;
   }
 }
+
+// 树节点
+export class GitEntryItem extends vscode.TreeItem {}
+
+//树的内容组织管理
+export class GitEntryList implements vscode.TreeDataProvider<GitEntryItem> {
+  onDidChangeTreeData?:
+    | vscode.Event<void | GitEntryItem | null | undefined>
+    | undefined;
+
+  getTreeItem(
+    element: GitEntryItem
+  ): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    return element;
+  }
+
+  getChildren(element?: GitEntryItem): vscode.ProviderResult<GitEntryItem[]> {
+    //子节点
+    var children = [];
+    for (let index = 0; index < 2; index++) {
+      var str: string = "";
+      var command: string = "";
+      var icon: Uri | vscode.ThemeIcon;
+
+      switch (index) {
+        case 0:
+          str = "打包";
+          command = "spgamemodextension.git.package";
+          icon = new vscode.ThemeIcon("file-zip");
+          break;
+
+        case 1:
+          str = "发布";
+          command = "spgamemodextension.git.publish";
+          icon = new vscode.ThemeIcon("cloud-upload");
+          break;
+
+        default:
+          throw new Error();
+      }
+
+      var item = new GitEntryItem(str, vscode.TreeItemCollapsibleState.None);
+      item.command = {
+        command: command, //命令id
+        title: "标题",
+        arguments: [str], //命令接收的参数
+      };
+      item.iconPath = icon; //vscode.Uri.file("close"); // 在这里设置按钮图标
+      children[index] = item;
+    }
+    return children;
+  }
+}

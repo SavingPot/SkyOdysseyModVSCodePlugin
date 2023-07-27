@@ -480,6 +480,58 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let gitReaddAllFilesDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.git.readd-all-files",
+    async () => {
+      if (hasWorkspace()) {
+        createNewTerminal().then((terminal) => {
+          terminal.sendText(`git rm -r --cached . ; git add .`);
+        });
+      }
+    }
+  );
+
+  let gitRevertLastChangeDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.git.revert-last-change",
+    async () => {
+      if (hasWorkspace()) {
+        createNewTerminal().then((terminal) => {
+          terminal.sendText(`git revert HEAD`);
+        });
+      }
+    }
+  );
+
+  let gitRevertBeforeLastChangeDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.git.revert-before-last-change",
+    async () => {
+      if (hasWorkspace()) {
+        createNewTerminal().then((terminal) => {
+          terminal.sendText(`git revert HEAD^`);
+        });
+      }
+    }
+  );
+
+  let gitResetUpstreamBranchDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.git.reset-upstream-branch",
+    async () => {
+      if (hasWorkspace()) {
+        createNewTerminal().then((terminal) => {
+          vscode.window
+            .showInputBox({
+              title: "分支",
+              ignoreFocusOut: true,
+              value: "origin/main",
+            })
+            .then((branch) => {
+              terminal.sendText(`git branch --set-upstream-to=${branch} `);
+            });
+        });
+      }
+    }
+  );
+
   context.subscriptions.push(syncDisposable);
   context.subscriptions.push(syncStaticDisposable);
   context.subscriptions.push(debugBuildDisposable);
@@ -490,6 +542,10 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(projectCreateDisposable);
   context.subscriptions.push(projectUpdateDisposable);
   context.subscriptions.push(projectGenerationBlockDisposable);
+  context.subscriptions.push(gitReaddAllFilesDisposable);
+  context.subscriptions.push(gitRevertLastChangeDisposable);
+  context.subscriptions.push(gitRevertBeforeLastChangeDisposable);
+  context.subscriptions.push(gitResetUpstreamBranchDisposable);
 }
 
 // This method is called when your extension is deactivated

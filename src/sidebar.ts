@@ -278,22 +278,34 @@ export class GitEntryList implements vscode.TreeDataProvider<GitEntryItem> {
   getChildren(element?: GitEntryItem): vscode.ProviderResult<GitEntryItem[]> {
     //子节点
     var children = [];
-    for (let index = 0; index < 2; index++) {
+    for (let index = 0; index < 4; index++) {
       var str: string = "";
       var command: string = "";
       var icon: Uri | vscode.ThemeIcon;
 
       switch (index) {
         case 0:
-          str = "打包";
-          command = "spgamemodextension.git.package";
-          icon = new vscode.ThemeIcon("file-zip");
+          str = "重新添加所有文件";
+          command = "spgamemodextension.git.readd-all-files";
+          icon = new vscode.ThemeIcon("refresh");
           break;
 
         case 1:
-          str = "发布";
-          command = "spgamemodextension.git.publish";
-          icon = new vscode.ThemeIcon("cloud-upload");
+          str = "撤销上次更改";
+          command = "spgamemodextension.git.revert-last-change";
+          icon = new vscode.ThemeIcon("arrow-left");
+          break;
+
+        case 2:
+          str = "撤销上上次更改";
+          command = "spgamemodextension.git.revert-before-last-change";
+          icon = new vscode.ThemeIcon("debug-reverse-continue");
+          break;
+
+        case 2:
+          str = "撤销上上次更改";
+          command = "spgamemodextension.git.reset-upstream-branch";
+          icon = new vscode.ThemeIcon("debug-reverse-continue");
           break;
 
         default:

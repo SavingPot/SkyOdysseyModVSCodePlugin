@@ -35,6 +35,10 @@ export function activate(context: vscode.ExtensionContext) {
     sidebarRelease
   );
 
+  //注册侧边栏面板的实现
+  const sidebarGit = new sidebar.GitEntryList();
+  vscode.window.registerTreeDataProvider("spgamemodextension_git", sidebarGit);
+
   let syncDisposable = vscode.commands.registerCommand(
     "spgamemodextension.sync",
     () => {

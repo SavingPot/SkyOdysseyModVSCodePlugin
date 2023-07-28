@@ -14,6 +14,9 @@ import { resolve } from "node:path";
 
 var childProcess: ChildProcess | undefined;
 
+//TODO: Do unity-code-snippets  by myself?
+//TODO: DO what JSON Tools can do : minify/prettify
+
 export function activate(context: vscode.ExtensionContext) {
   //注册侧边栏面板的实现
   const sidebarProject = new sidebar.ProjectEntryList();
@@ -536,6 +539,26 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let minifyJsonDisposable = vscode.commands.registerCommand(
+    "spgamemodextension.json.minify",
+    () => {
+      let editor = vscode.window.activeTextEditor;
+      if (editor) {
+        var originalText = editor.document.getText();
+        var processedText = JSON.minify(originalText);
+
+        let document = editor.document;
+        let firstLine = document.lineAt(0);
+        let lastLine = document.lineAt(document.lineCount - 1);
+        let range = new vscode.Range(firstLine.range.start, lastLine.range.end);
+        let edit = new vscode.TextEdit(range, processedText);
+        let workspaceEdit = new vscode.WorkspaceEdit();
+        workspaceEdit.set(document.uri, [edit]);
+        vscode.workspace.applyEdit(workspaceEdit);
+      }
+    }
+  );
+
   context.subscriptions.push(syncDisposable);
   context.subscriptions.push(syncStaticDisposable);
   context.subscriptions.push(debugBuildDisposable);
@@ -550,6 +573,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(gitRevertLastChangeDisposable);
   context.subscriptions.push(gitRevertBeforeLastChangeDisposable);
   context.subscriptions.push(gitResetUpstreamBranchDisposable);
+  context.subscriptions.push(minifyJsonDisposable);
 }
 
 // This method is called when your extension is deactivated

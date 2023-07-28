@@ -1,7 +1,7 @@
-# Change Log
+# 更新日志
+## 0.0.5
+- 插件图标
+- 简介
 
-Nothing
-
-## [Unreleased]
-
-- Initial release
+## 0.0.4
+- 插件图标

@@ -3,7 +3,7 @@
   "publisher": "SavingPot",
   "displayName": "浮岛传说模组开发工具包",
   "description": "为开发浮岛传说的模组提供支持, 提高开发效率",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.77.0"
   },

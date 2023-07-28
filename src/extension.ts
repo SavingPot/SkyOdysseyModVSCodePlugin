@@ -15,35 +15,35 @@ import { resolve } from "node:path";
 var childProcess: ChildProcess | undefined;
 
 //TODO: Do unity-code-snippets  by myself?
-//TODO: DO what JSON Tools can do : minify/prettify
+//TODO: Allows users to set if there should be space in exported json files
 
 export function activate(context: vscode.ExtensionContext) {
   //注册侧边栏面板的实现
   const sidebarProject = new sidebar.ProjectEntryList();
   vscode.window.registerTreeDataProvider(
-    "spgamemodextension_project",
+    "sky-odyssey-mod-dev_project",
     sidebarProject
   );
   //注册侧边栏面板的实现
   const sidebarDebug = new sidebar.BuildEntryList();
   vscode.window.registerTreeDataProvider(
-    "spgamemodextension_debug",
+    "sky-odyssey-mod-dev_debug",
     sidebarDebug
   );
 
   //注册侧边栏面板的实现
   const sidebarRelease = new sidebar.ReleaseEntryList();
   vscode.window.registerTreeDataProvider(
-    "spgamemodextension_release",
+    "sky-odyssey-mod-dev_release",
     sidebarRelease
   );
 
   //注册侧边栏面板的实现
   const sidebarGit = new sidebar.GitEntryList();
-  vscode.window.registerTreeDataProvider("spgamemodextension_git", sidebarGit);
+  vscode.window.registerTreeDataProvider("sky-odyssey-mod-dev_git", sidebarGit);
 
   let syncDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.sync",
+    "sky-odyssey-mod-dev.sync",
     () => {
       var editor = vscode.window.activeTextEditor;
       if (editor && editor.selection && editor.selection.active) {
@@ -72,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let syncStaticDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.syncStatic",
+    "sky-odyssey-mod-dev.syncStatic",
     () => {
       var editor = vscode.window.activeTextEditor;
       if (editor && editor.selection && editor.selection.active) {
@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let projectCreateDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.project.create",
+    "sky-odyssey-mod-dev.project.create",
     async () => {
       if (
         fs.existsSync(
@@ -145,7 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let projectUpdateDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.project.update",
+    "sky-odyssey-mod-dev.project.update",
     () => {
       if (hasWorkspace() && hasGamePath() && hasSoleAssetsPath()) {
         var content = '<Project Sdk="Microsoft.NET.Sdk">\n';
@@ -195,7 +195,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let projectGenerationAudioDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.project.generation.audio",
+    "sky-odyssey-mod-dev.project.generation.audio",
     () => {
       if (hasModPath()) {
         var editor = vscode.window.activeTextEditor;
@@ -273,7 +273,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   //TODO: Edit this function
   let projectGenerationBlockDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.project.generation.block",
+    "sky-odyssey-mod-dev.project.generation.block",
     () => {
       if (hasModPath()) {
         var editor = vscode.window.activeTextEditor;
@@ -366,7 +366,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let debugBuildDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.debug.build",
+    "sky-odyssey-mod-dev.debug.build",
     () => {
       if (hasWorkspace() && hasModPath()) {
         createNewTerminal().then((terminal) => {
@@ -400,7 +400,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let debugBuildAndRunDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.debug.build_and_run",
+    "sky-odyssey-mod-dev.debug.build_and_run",
     () => {
       if (process.platform !== "win32") {
         vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
@@ -443,7 +443,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let debugRunDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.debug.run",
+    "sky-odyssey-mod-dev.debug.run",
     () => {
       if (process.platform !== "win32") {
         vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
@@ -458,7 +458,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let debugStopDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.debug.stop",
+    "sky-odyssey-mod-dev.debug.stop",
     () => {
       if (process.platform !== "win32") {
         vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
@@ -477,7 +477,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let debugCleanDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.debug.clean",
+    "sky-odyssey-mod-dev.debug.clean",
     async () => {
       if (hasWorkspace()) {
         createNewTerminal().then((terminal) => {
@@ -488,7 +488,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let gitReaddAllFilesDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.git.readd-all-files",
+    "sky-odyssey-mod-dev.git.readd-all-files",
     async () => {
       if (hasWorkspace()) {
         createNewTerminal().then((terminal) => {
@@ -499,7 +499,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let gitRevertLastChangeDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.git.revert-last-change",
+    "sky-odyssey-mod-dev.git.revert-last-change",
     async () => {
       if (hasWorkspace()) {
         createNewTerminal().then((terminal) => {
@@ -510,7 +510,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let gitRevertBeforeLastChangeDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.git.revert-before-last-change",
+    "sky-odyssey-mod-dev.git.revert-before-last-change",
     async () => {
       if (hasWorkspace()) {
         createNewTerminal().then((terminal) => {
@@ -521,7 +521,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let gitResetUpstreamBranchDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.git.reset-upstream-branch",
+    "sky-odyssey-mod-dev.git.reset-upstream-branch",
     async () => {
       if (hasWorkspace()) {
         createNewTerminal().then((terminal) => {
@@ -540,12 +540,12 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let minifyJsonDisposable = vscode.commands.registerCommand(
-    "spgamemodextension.json.minify",
+    "sky-odyssey-mod-dev.json.minify",
     () => {
       let editor = vscode.window.activeTextEditor;
       if (editor) {
         var originalText = editor.document.getText();
-        var processedText = JSON.minify(originalText);
+        var processedText = JSON.stringify(JSON.parse(originalText));
 
         let document = editor.document;
         let firstLine = document.lineAt(0);

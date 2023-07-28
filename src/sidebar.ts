@@ -31,13 +31,13 @@ export class ProjectEntryList
       switch (index) {
         case 0:
           str = "创建项目";
-          command = "spgamemodextension.project.create";
+          command = "sky-odyssey-mod-dev.project.create";
           icon = new vscode.ThemeIcon("add");
           break;
 
         case 1:
           str = "更新项目";
-          command = "spgamemodextension.project.update";
+          command = "sky-odyssey-mod-dev.project.update";
           icon = new vscode.ThemeIcon("checklist");
           break;
 
@@ -49,61 +49,61 @@ export class ProjectEntryList
 
         case 3:
           str = "添加音效";
-          command = "spgamemodextension.project.generation.audio";
+          command = "sky-odyssey-mod-dev.project.generation.audio";
           icon = new vscode.ThemeIcon("bell");
           break;
 
         case 4:
           str = "添加纹理";
-          command = "spgamemodextension.project.generation.texture";
+          command = "sky-odyssey-mod-dev.project.generation.texture";
           icon = new vscode.ThemeIcon("file-media");
           break;
 
         case 5:
           str = "创建方块";
-          command = "spgamemodextension.project.generation.block";
+          command = "sky-odyssey-mod-dev.project.generation.block";
           icon = new vscode.ThemeIcon("chrome-maximize");
           break;
 
         case 6:
           str = "创建实体";
-          command = "spgamemodextension.project.generation.entity";
+          command = "sky-odyssey-mod-dev.project.generation.entity";
           icon = new vscode.ThemeIcon("squirrel");
           break;
 
         case 7:
           str = "创建物品";
-          command = "spgamemodextension.project.generation.item";
+          command = "sky-odyssey-mod-dev.project.generation.item";
           icon = new vscode.ThemeIcon("gift");
           break;
 
         case 8:
           str = "创建群系";
-          command = "spgamemodextension.project.generation.biome";
+          command = "sky-odyssey-mod-dev.project.generation.biome";
           icon = new vscode.ThemeIcon("symbol-snippet");
           break;
 
         case 9:
           str = "创建语言";
-          command = "spgamemodextension.project.generation.language";
+          command = "sky-odyssey-mod-dev.project.generation.language";
           icon = new vscode.ThemeIcon("globe");
           break;
 
         case 10:
           str = "创建配方";
-          command = "spgamemodextension.project.generation.recipe";
+          command = "sky-odyssey-mod-dev.project.generation.recipe";
           icon = new vscode.ThemeIcon("output");
           break;
 
         case 11:
           str = "创建咒语";
-          command = "spgamemodextension.project.generation.spell";
+          command = "sky-odyssey-mod-dev.project.generation.spell";
           icon = new vscode.ThemeIcon("sparkle");
           break;
 
         case 12:
           str = "创建结构";
-          command = "spgamemodextension.project.generation.structure";
+          command = "sky-odyssey-mod-dev.project.generation.structure";
           icon = new vscode.ThemeIcon("home");
           break;
 
@@ -155,31 +155,31 @@ export class BuildEntryList implements vscode.TreeDataProvider<BuildEntryItem> {
       switch (index) {
         case 0:
           str = "导出";
-          command = "spgamemodextension.debug.build";
+          command = "sky-odyssey-mod-dev.debug.build";
           icon = new vscode.ThemeIcon("export");
           break;
 
         case 1:
           str = "导出并运行";
-          command = "spgamemodextension.debug.build_and_run";
+          command = "sky-odyssey-mod-dev.debug.build_and_run";
           icon = new vscode.ThemeIcon("check");
           break;
 
         case 2:
           str = "清理导出";
-          command = "spgamemodextension.debug.clean";
+          command = "sky-odyssey-mod-dev.debug.clean";
           icon = new vscode.ThemeIcon("trash");
           break;
 
         case 3:
           str = "运行游戏";
-          command = "spgamemodextension.debug.run";
+          command = "sky-odyssey-mod-dev.debug.run";
           icon = new vscode.ThemeIcon("run");
           break;
 
         case 4:
           str = "关闭游戏";
-          command = "spgamemodextension.debug.stop";
+          command = "sky-odyssey-mod-dev.debug.stop";
           icon = new vscode.ThemeIcon("close");
           break;
 
@@ -230,13 +230,13 @@ export class ReleaseEntryList
       switch (index) {
         case 0:
           str = "打包";
-          command = "spgamemodextension.release.package";
+          command = "sky-odyssey-mod-dev.release.package";
           icon = new vscode.ThemeIcon("file-zip");
           break;
 
         case 1:
           str = "发布";
-          command = "spgamemodextension.release.publish";
+          command = "sky-odyssey-mod-dev.release.publish";
           icon = new vscode.ThemeIcon("cloud-upload");
           break;
 
@@ -286,25 +286,25 @@ export class GitEntryList implements vscode.TreeDataProvider<GitEntryItem> {
       switch (index) {
         case 0:
           str = "重新添加所有文件";
-          command = "spgamemodextension.git.readd-all-files";
+          command = "sky-odyssey-mod-dev.git.readd-all-files";
           icon = new vscode.ThemeIcon("refresh");
           break;
 
         case 1:
           str = "撤销上次更改";
-          command = "spgamemodextension.git.revert-last-change";
+          command = "sky-odyssey-mod-dev.git.revert-last-change";
           icon = new vscode.ThemeIcon("arrow-left");
           break;
 
         case 2:
           str = "撤销上上次更改";
-          command = "spgamemodextension.git.revert-before-last-change";
+          command = "sky-odyssey-mod-dev.git.revert-before-last-change";
           icon = new vscode.ThemeIcon("debug-reverse-continue");
           break;
 
         case 3:
           str = "重置上传目标分支";
-          command = "spgamemodextension.git.reset-upstream-branch";
+          command = "sky-odyssey-mod-dev.git.reset-upstream-branch";
           icon = new vscode.ThemeIcon("debug-restart");
           break;
 

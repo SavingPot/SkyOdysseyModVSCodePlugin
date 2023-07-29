@@ -11,11 +11,13 @@ import * as child from "child_process";
 import { TextureSettings046_Texture } from "./json_objects/texture_settings/0.4.6";
 import { ChildProcess } from "node:child_process";
 import { resolve } from "node:path";
+import { platform } from "node:os";
 
 var childProcess: ChildProcess | undefined;
 
 //TODO: Do unity-code-snippets  by myself?
 //TODO: Allows users to set if there should be space in exported json files
+//TODO: Auto install Debugger mod for the game version
 
 export function activate(context: vscode.ExtensionContext) {
   //注册侧边栏面板的实现
@@ -156,11 +158,25 @@ export function activate(context: vscode.ExtensionContext) {
         content += "    <DebugType>embedded</DebugType>\n";
         content += "  </PropertyGroup>\n";
         content += "  <ItemGroup>\n";
-        var managedPath = pathUtil.join(
-          getGamePath(),
-          "SkyOdyssey_Data",
-          "Managed"
-        );
+
+        var managedPath: string;
+
+        switch (process.platform) {
+          case "win32":
+            managedPath = pathUtil.join(
+              getGamePath(),
+              "SkyOdyssey_Data",
+              "Managed"
+            );
+            break;
+
+          case "android":
+            managedPath = pathUtil.join(getGamePath(), "Data", "Managed");
+            break;
+
+          default:
+            throw new Error();
+        }
 
         function addDllFileToContent(f: string) {
           content += `    <Reference Include="${pathUtil.basename(
@@ -580,12 +596,32 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 function showGamePathInputBox() {
+  var placeHolder;
+  var defaultValue = undefined;
+
+  switch (process.platform) {
+    case "win32":
+      placeHolder =
+        "先找到 SkyOdyssey.exe, 然后填写 SkyOdyssey.exe 所处的目录, 如 D:\\Game, 不能写 D:\\Game\\SkyOdyssey";
+      break;
+
+    case "android":
+      defaultValue =
+        "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/";
+      placeHolder =
+        "先确保运行过游戏, 然后输入 /storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/";
+      break;
+
+    default:
+      throw new Error();
+  }
+
   vscode.window
     .showInputBox({
-      placeHolder:
-        "先找到 SkyOdyssey.exe, 然后填写 SkyOdyssey.exe 所处的目录, 如 D:\\Game, 不能写 D:\\Game\\SkyOdyssey", // 在输入框内的提示信息
+      placeHolder: placeHolder, // 在输入框内的提示信息
       prompt: "游戏文件夹", // 在输入框下方的提示信息
       ignoreFocusOut: true,
+      value: defaultValue,
     })
     .then((input) => {
       if (input) {
@@ -598,12 +634,32 @@ function showGamePathInputBox() {
 }
 
 function showModPathInputBox() {
+  var placeHolder;
+  var defaultValue = undefined;
+
+  switch (process.platform) {
+    case "win32":
+      placeHolder =
+        "直接输入所有模组的根, 可以在游戏中点击 模组管理->打开源文件夹, 然后复制到输入框";
+      break;
+
+    case "android":
+      defaultValue =
+        "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/mods/";
+      placeHolder =
+        "输入 /storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/mods/";
+      break;
+
+    default:
+      throw new Error();
+  }
+
   vscode.window
     .showInputBox({
-      placeHolder:
-        "如果我的模组叫 my_mod, 模组目录在 C:\\mods, 不要写 C:\\mods\\my_mod, 直接输入所有模组的根就好", // 在输入框内的提示信息
-      prompt: "模组文件夹", // 在输入框下方的提示信息
+      placeHolder: placeHolder, // 在输入框内的提示信息
+      prompt: "游戏模组总文件夹", // 在输入框下方的提示信息
       ignoreFocusOut: true,
+      value: defaultValue,
     })
     .then((input) => {
       if (input) {
@@ -616,12 +672,32 @@ function showModPathInputBox() {
 }
 
 function showSoleAssetsPathInputBox() {
+  var placeHolder;
+  var defaultValue = undefined;
+
+  switch (process.platform) {
+    case "win32":
+      placeHolder =
+        "找到游戏版本对应的 sole_assets, 如 D:\\Game\\SkyOdyssey_Data\\Managed\\StreamingAssets\\sole_assets"; // 在输入框内的提示信息
+      break;
+
+    case "android":
+      defaultValue =
+        "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/assets/sole_assets/";
+      placeHolder =
+        "输入 /storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/assets/sole_assets/";
+      break;
+
+    default:
+      throw new Error();
+  }
+
   vscode.window
     .showInputBox({
-      placeHolder:
-        "找到游戏版本对应的 sole_assets, 如 D:\\Game\\SkyOdyssey_Data\\Managed\\StreamingAssets\\sole_assets", // 在输入框内的提示信息
+      placeHolder: placeHolder,
       prompt: "独有资源文件夹", // 在输入框下方的提示信息
       ignoreFocusOut: true,
+      value: defaultValue,
     })
     .then((input) => {
       if (input) {

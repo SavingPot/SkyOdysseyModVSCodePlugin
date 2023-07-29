@@ -20,6 +20,19 @@ var childProcess: ChildProcess | undefined;
 //TODO: Auto install Debugger mod for the game version
 
 export function activate(context: vscode.ExtensionContext) {
+  if (!hasWorkspace()) {
+  }
+  if (
+    process.platform === "linux" &&
+    !fs.readdirSync(
+      "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/"
+    )
+  ) {
+    vscode.window.showErrorMessage(
+      "请先运行游戏, 然后重启 VHEditor, 再使用插件"
+    );
+  }
+
   //注册侧边栏面板的实现
   const sidebarProject = new sidebar.ProjectEntryList();
   vscode.window.registerTreeDataProvider(
@@ -105,6 +118,8 @@ export function activate(context: vscode.ExtensionContext) {
   let projectCreateDisposable = vscode.commands.registerCommand(
     "sky-odyssey-mod-dev.project.create",
     async () => {
+      vscode.window.showInformationMessage(process.platform);
+
       if (
         fs.existsSync(
           pathUtil.join(getWorkspacePath(), `${getWorkspaceName()}.sln`)
@@ -165,12 +180,14 @@ export function activate(context: vscode.ExtensionContext) {
           case "win32":
             managedPath = pathUtil.join(
               getGamePath(),
-              "SkyOdyssey_Data",
+              "assets",
+              "bin",
+              "Data",
               "Managed"
             );
             break;
 
-          case "android":
+          case "linux":
             managedPath = pathUtil.join(getGamePath(), "Data", "Managed");
             break;
 
@@ -418,10 +435,6 @@ export function activate(context: vscode.ExtensionContext) {
   let debugBuildAndRunDisposable = vscode.commands.registerCommand(
     "sky-odyssey-mod-dev.debug.build_and_run",
     () => {
-      if (process.platform !== "win32") {
-        vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
-      }
-
       if (hasWorkspace() && hasModPath() && hasGamePath()) {
         createNewTerminal().then(async (terminal) => {
           var workspace = getWorkspacePath();
@@ -461,10 +474,6 @@ export function activate(context: vscode.ExtensionContext) {
   let debugRunDisposable = vscode.commands.registerCommand(
     "sky-odyssey-mod-dev.debug.run",
     () => {
-      if (process.platform !== "win32") {
-        vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
-      }
-
       if (hasWorkspace() && hasGamePath()) {
         killGame().then(() => {
           runGame();
@@ -476,10 +485,6 @@ export function activate(context: vscode.ExtensionContext) {
   let debugStopDisposable = vscode.commands.registerCommand(
     "sky-odyssey-mod-dev.debug.stop",
     () => {
-      if (process.platform !== "win32") {
-        vscode.window.showErrorMessage(`目前只有 Windows 平台可以使用该功能`);
-      }
-
       if (hasWorkspace() && hasGamePath()) {
         if (!childProcess) {
           vscode.window.showWarningMessage(
@@ -584,6 +589,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(debugCleanDisposable);
   context.subscriptions.push(projectCreateDisposable);
   context.subscriptions.push(projectUpdateDisposable);
+  context.subscriptions.push(projectGenerationAudioDisposable);
   context.subscriptions.push(projectGenerationBlockDisposable);
   context.subscriptions.push(gitReaddAllFilesDisposable);
   context.subscriptions.push(gitRevertLastChangeDisposable);
@@ -605,7 +611,7 @@ function showGamePathInputBox() {
         "先找到 SkyOdyssey.exe, 然后填写 SkyOdyssey.exe 所处的目录, 如 D:\\Game, 不能写 D:\\Game\\SkyOdyssey";
       break;
 
-    case "android":
+    case "linux":
       defaultValue =
         "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/";
       placeHolder =
@@ -643,7 +649,7 @@ function showModPathInputBox() {
         "直接输入所有模组的根, 可以在游戏中点击 模组管理->打开源文件夹, 然后复制到输入框";
       break;
 
-    case "android":
+    case "linux":
       defaultValue =
         "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/mods/";
       placeHolder =
@@ -681,7 +687,7 @@ function showSoleAssetsPathInputBox() {
         "找到游戏版本对应的 sole_assets, 如 D:\\Game\\SkyOdyssey_Data\\Managed\\StreamingAssets\\sole_assets"; // 在输入框内的提示信息
       break;
 
-    case "android":
+    case "linux":
       defaultValue =
         "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/assets/sole_assets/";
       placeHolder =
@@ -765,7 +771,20 @@ async function waitForTerminalCompletion(terminal: Terminal) {
 }
 
 function runGame() {
-  childProcess = child.spawn(getGameExePath());
+  switch (process.platform) {
+    case "win32":
+      childProcess = child.spawn(
+        "am start -n com.SavingPotStudio.SkyOdyssey/com.unity3d.player.UnityPlayerActivity"
+      );
+      break;
+
+    case "linux":
+      childProcess = child.spawn(getGameExePath());
+      break;
+
+    default:
+      throw new Error();
+  }
 }
 
 function killGame() {
@@ -777,11 +796,22 @@ function killGame() {
     // 发送终止信号给进程
     createNewTerminal().then((terminal) => {
       if (childProcess) {
-        terminal.sendText(`taskkill /pid ${childProcess.pid} /f`);
-        waitForTerminalCompletion(terminal).then(() => {
-          childProcess = undefined;
-          resolve();
-        });
+        switch (process.platform) {
+          case "win32":
+            terminal.sendText(`taskkill /pid ${childProcess.pid} /f`);
+            waitForTerminalCompletion(terminal).then(() => {
+              childProcess = undefined;
+              resolve();
+            });
+            break;
+
+          case "linux":
+            childProcess.kill();
+            break;
+
+          default:
+            throw new Error();
+        }
       }
     });
   });

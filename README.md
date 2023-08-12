@@ -1,5 +1,5 @@
 # 浮岛传说模组开发工具包
-这是开发 浮岛传说 Mod 专用的插件, 支持 Windows / VSCode Server
+这是开发 浮岛传说 Mod 专用的插件, 支持 Windows / code-server
 
 
 ## 同时, 我们推荐您安装以下插件

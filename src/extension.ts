@@ -20,17 +20,8 @@ var childProcess: ChildProcess | undefined;
 //TODO: Auto install Debugger mod for the game version
 
 export function activate(context: vscode.ExtensionContext) {
+  //TODO: Complete
   if (!hasWorkspace()) {
-  }
-  if (
-    process.platform === "linux" &&
-    !fs.readdirSync(
-      "/storage/emulated/0/Android/data/com.SavingPotStudio.SkyOdyssey/files/self_cache/game_apk_unzipped/"
-    )
-  ) {
-    vscode.window.showErrorMessage(
-      "请先运行游戏, 然后重启 VHEditor, 再使用插件"
-    );
   }
 
   //注册侧边栏面板的实现
@@ -117,9 +108,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   let projectCreateDisposable = vscode.commands.registerCommand(
     "sky-odyssey-mod-dev.project.create",
-    async () => {
-      vscode.window.showInformationMessage(process.platform);
-
+    () => {
       if (
         fs.existsSync(
           pathUtil.join(getWorkspacePath(), `${getWorkspaceName()}.sln`)
@@ -413,20 +402,43 @@ export function activate(context: vscode.ExtensionContext) {
             "net4.7.1",
             "scripts.dll"
           )}"`;
+
           var targetPath = `"${pathUtil.join(
             joc.modScriptsPath(),
             "scripts.dll"
           )}"`;
+          let commands = new Set<string>();
           if (fs.existsSync(targetPath)) {
-            terminal.sendText(`rm -force ${targetPath}`);
+            commands.add(`rm -force ${targetPath}`);
           }
-          terminal.sendText(`cp -force ${dllPath} ${targetPath}`);
+          commands.add(`cp -force ${dllPath} ${targetPath}`);
           if (fs.existsSync(modTargetPath())) {
-            terminal.sendText(`rm -r -force ${modTargetPath()}`);
+            commands.add(`rm -r -force ${modTargetPath()}`);
           }
-          terminal.sendText(
+          commands.add(
             `cp -r -force ${joc.modSourcePath()} ${modTargetPath()}`
           );
+
+          switch (process.platform) {
+            case "win32":
+              commands.forEach((element) => {
+                terminal.sendText(element);
+              });
+              break;
+
+            default:
+              var shPath = pathUtil.join(getWorkspacePath(), "build.sh");
+              var content = "";
+              commands.forEach((element) => {
+                content += element + "\n";
+              });
+
+              if (fs.readFileSync(shPath)) {
+                fs.rmSync(shPath);
+              }
+              fs.writeFileSync(shPath, content);
+              break;
+          }
         });
       }
     }

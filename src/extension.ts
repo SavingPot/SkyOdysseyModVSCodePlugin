@@ -128,6 +128,9 @@ export function activate(context: vscode.ExtensionContext) {
           let entryContent = `using GameCore;\nusing UnityEngine;\n\nnamespace ${getWorkspaceName()}\n{\n    public class ${getWorkspaceName()}ModEntry : ModEntry\n    {\n        public override void OnLoaded()\n        {\n            base.OnLoaded();\n\n            \n        }\n    }\n}`;
 
           terminal.sendText(`cd "${workspace}"`);
+          terminal.sendText(
+            `echo "root = true\n\n[*.cs]\ndotnet_diagnostic.IDE1006.severity = none\ndotnet_diagnostic.IDE0060.severity = none" > .editorconfig`
+          );
           terminal.sendText(`dotnet new sln --name "${getWorkspaceName()}"`);
           terminal.sendText(`mkdir -p "${csprojPath}"`);
           terminal.sendText(`cd "${csprojPath}"`);

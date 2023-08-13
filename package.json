@@ -95,5 +95,9 @@
     "ms-dotnettools.csharp",
     "kreativ-software.csharpextensions",
     "kleber-swf.unity-code-snippets"
+  ],
+  "extensionPack": [
+    "zhuangtongfa.material-theme",
+    "vscode-icons-team.vscode-icons"
   ]
 }

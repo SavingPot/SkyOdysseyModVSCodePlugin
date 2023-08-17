@@ -1,13 +1,13 @@
 # 更新日志
 
 ## 0.1.2
-- 删除了了无用的 Snippets
+- 删除了无用的 Snippets
 - 删除了多余的设置
 
 ## 0.1.1
 - 添加了对 Github 仓库的引用
-- 添加了 Unity Snippets
-- 去除了 Unity Code Snippets 拓展包
+- 添加了 Snippets
+- 去除了 Unity Code Snippets 依赖包
 
 ## 0.1.0
 - 去除了 C# Extensions 依赖包
@@ -26,5 +26,5 @@
 - 更好地支持了 Android 平台
 
 ## 0.0.5
-- 插件图标
-- 简介
+- 添加了插件图标
+- 添加了简介

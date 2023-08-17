@@ -3,7 +3,11 @@
   "publisher": "SavingPot",
   "displayName": "浮岛传说模组开发工具包",
   "description": "为开发浮岛传说的模组提供支持, 提高开发效率",
-  "version": "0.0.9",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SavingPot/SkyOdysseyModVSCodePlugin"
+  },
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -68,7 +72,6 @@
       }
     ]
   },
-  "repository": {},
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -91,9 +94,7 @@
     "typescript": "^4.9.3"
   },
   "extensionDependencies": [
-    "ms-dotnettools.csharp",
-    "kreativ-software.csharpextensions",
-    "kleber-swf.unity-code-snippets"
+    "ms-dotnettools.csharp"
   ],
   "extensionPack": [
     "zhuangtongfa.material-theme",

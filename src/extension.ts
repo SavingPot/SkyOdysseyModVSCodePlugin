@@ -172,15 +172,19 @@ export function activate(context: vscode.ExtensionContext) {
           case "win32":
             managedPath = pathUtil.join(
               getGamePath(),
-              "assets",
-              "bin",
-              "Data",
+              "SkyOdyssey_Data",
               "Managed"
             );
             break;
 
           case "linux":
-            managedPath = pathUtil.join(getGamePath(), "Data", "Managed");
+            managedPath = pathUtil.join(
+              getGamePath(),
+              "assets",
+              "bin",
+              "Data",
+              "Managed"
+            );
             break;
 
           default:

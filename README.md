@@ -50,3 +50,10 @@
   - 最小化 Json
   - 同步变量
   - 静态同步变量
+
+
+
+
+
+该项目引用了以下开源库:
+- https://github.com/kleber-swf/vscode-unity-code-snippets
